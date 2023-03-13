@@ -1,4 +1,11 @@
 
+/*
+// SuHuan - Blind box Figurine vending machine
+// mousePress the different color of ellipse to display the image of anime character figurines
+   Key pressed return or enter to go to initial scence
+*/
+
+
 boolean box = false;
 
 //background image
@@ -42,7 +49,7 @@ PImage gundam;
 int image = 0;
 PImage[] images = new PImage[3];
 
-// opean box scence
+// inital scence
 int scence = 0;
 
 void setup(){
@@ -73,9 +80,10 @@ void setup(){
 
 
 void draw(){
-  //background
+  
 if (scence == 0){
  imageMode(CENTER);
+ //background image
 image(bk,360,240);
   
 // vending machine
@@ -169,24 +177,29 @@ void display(){
 }
 
 void mousePressed(){
+  // if the pink button is pressed
   if(mouseX > x-w/2 && mouseX < x+w/2 && mouseY > y-h/2 && mouseY < y+h/2){
     //image(mario,200,300);
     image = int(random(images.length));
     box = !box;
   }
+  // if the blue button is pressed
   else if(mouseX > x1-w/2 && mouseX < x1+w/2 && mouseY > y1-h/2 && mouseY < y1+h/2){
  image = int(random(images.length));
  box = !box;
   
   }
+  //if the red button is pressed
   else if(mouseX > x2-w/2 && mouseX < x2+w/2 && mouseY > y2-h/2 && mouseY < y2+h/2){
  image = int(random(images.length));
  box = !box;
   }
+  // if the green button is prssed
   else if(mouseX > x3-w/2 && mouseX < x3+w/2 && mouseY > y3-h/2 && mouseY < y3+h/2){
   image = int(random(images.length));
   box = !box;
   }
+  // if the prize is pressed then go to the opean box scence
   else if (mouseX > x4-w1/2 && mouseX < x4+w1/2 && mouseY > y4-h1/2 && mouseY < y4+h1/2){
    scence = 1;
    box = !box;
