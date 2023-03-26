@@ -1,4 +1,3 @@
-
 /*
 // SuHuan - Blind box Figurine vending machine
 // mousePress the different color of ellipse to display the image of anime character figurines
