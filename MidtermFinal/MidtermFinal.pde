@@ -2,6 +2,8 @@
 // SuHuan - Click explore game
 // mousePress the specific place to display the image or go to next scence
    key pressed return or enter to go to previously scence, also for some scence press specific key to interact the scence
+   this project have audio file you need to download the Sound in the libraries in order to hear the sound.
+
    
    
    // fonts url
@@ -19,7 +21,8 @@
    shopinside:https://e0.pxfuel.com/wallpapers/371/986/desktop-wallpaper-arsenixc-old-bar-anime-scenery-anime-places-anime-coffee-shop.jpg
    seat:https://e0.pxfuel.com/wallpapers/428/419/desktop-wallpaper-anime-cafe-anime-coffee-shop.jpg
    vending machine:https://www.artstation.com/artwork/aRra8R, I have remove the background and only keep the machine but this is the full picture look like
-  
+   mouse cursor: https://www.kindpng.com/picc/m/92-923476_animated-gif-mouse-click-hd-png-download.png
+   
    // figures
    mario:https://pixabay.com/photos/super-mario-red-jumping-man-1138462/
    naruto:https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTGEm7oRPhFXJq4rZ2Jv_JwOcQ6TontFJgsJpC3pmGA747ARVPu
@@ -64,6 +67,9 @@ PImage mocha;
 PImage coffee;
 // image of vending machine
 PImage machine;
+// image of mouse click
+PImage mouse;
+PImage mouse1;
 // font
 PFont font;
 PFont text;
@@ -129,6 +135,12 @@ void setup(){
   font = createFont("Barenda.ttf",27);
   
   text = createFont("Andria.ttf",25);
+
+  mouse = loadImage("mouseclick.png");
+  mouse.resize(100,100);
+  mouse1 = loadImage("mouseclick.png");
+  mouse1.resize(100,100);
+
 
   //scence 0
   cafe = loadImage("nightcafe.jpeg");
@@ -217,6 +229,12 @@ fill(255,255,204);
 text("Initial amount of money will be randomly",260,30);
 fill(255);
 text("Current $" + rmoney, 620,30);
+// points to the machine
+rotate(1.2);
+image(mouse,440,-350);
+// points to the door
+rotate(-1.8);
+image(mouse1,30,380);
 }
 
 
@@ -241,22 +259,29 @@ text("Mocha $25",10,260);
 fill(51,153,255);
 text("Press Return to leave the shop",width/2-170,450);
 fill(255,100,200);
-text("Press S key to find a seat", 250, 30);
+//text("Press S key to find a seat", 250, 30);
 }
+else{
 fill(255);
 text("$" + rmoney, 30,30);
+fill(204,255,255);
+text("Move you mouse to the menu for order", width/2-200,250);
+text("Press S key to find a seat to sit", width/2-200,290);
+text("The coffee you order will be show on the seat scene",width/2-320,340);
+}
 }
 
 void scence2(){
 image(seat,360,240);
 moonshine.amp(0.5);
+fill(255);
 text("$" + rmoney, 30,30);
-if(rmoney <= 10){
+if(rmoney <= 18){
 fill(255,0,0);
 textSize(30);
 textAlign(CENTER);
 text("You don't have enough money to order anything", width/2+10,height/2-150);
-show = false;
+text("Press R key to reset money", width/2,30);
 }
 if(rmoney <= 19){
 fill(255,0,0);
@@ -278,36 +303,41 @@ text("You don't have enough money to order a Latte", width/2+10,height/2);
 }
 if(show){
 image(coffee,350,390);
+if(coffee == cupchino){
+  fill(153,255,204);
+   textAlign(LEFT);
+   text("Here is you Cappuccino, enjoy it", 200,320);
+}
+else if(coffee == latte){
+  fill(153,255,204);
+  textAlign(LEFT);
+  text("Here is you Latte, enjoy it", 200,320);
+}
+else{
+  fill(153,255,204);
+  textAlign(LEFT);
+  text("Here is you Mocha coffee, enjoy it", 200,320);
+}
 }
 }
 
 
 void scence3(){
- imageMode(CENTER);
+  imageMode(CENTER);
  //background image
  tint(100);
  image(cafe,360,240);
  fill(255);
 textFont(text);
-text("$" + rmoney, 90,30);
+text("$" + rmoney, 25,30);
 fill(255,255,0);
-textSize(25);
+textSize(23);
 textFont(font);
 textAlign(LEFT);
 text("Item contains--", 10,100);
 text("-Drinks", 10,130);
 text("-Electronic item", 10,160);
 text("-Anime Figures", 10,190);
-text("Each try cost 50", 10,250);
-// If money is less than 50;
-if(rmoney <= 49){
-fill(255,0,0);
-textSize(30);
-textAlign(LEFT);
-text("Not", 490,130);
-text("enough", 530,190);
-text("money!!!", 580,250);
-}
 // vending machine outer shell
 noStroke();
 fill(255,178,102);
@@ -353,8 +383,31 @@ fill(204,204,255);
 square(x,y,30);
     }
   }
+// If money is less than 50;
+if(rmoney <= 49){
+fill(255,0,0);
+textSize(30);
+textAlign(LEFT);
+text("Not", 490,130);
+text("enough", 530,190);
+text("money!!!", 580,250);
+textAlign(CENTER);
+text("Press R key to reset", width/2, 30);
 }
-
+else{
+fill(255,255,0);
+textSize(22.5);
+text("Press the color button", 590,130);
+text("A box will be appear", 590,160);
+text("Each button drop", 590,190);
+text("Random items", 590,220);
+text("Click the box", 590,250);
+text("For check the prize ", 590,280);
+textSize(25);
+text("Instruction:", 590, 100);
+text("Each try cost 50", 590,350);
+}
+}
 
 void scence4(){
   noTint();
@@ -367,6 +420,7 @@ void opeanbox(){
   imageMode(CENTER);
   image(images[image],width/2,height/2);
   textSize(30);
+  textAlign(CENTER);
   if (image == 0){
   text("Congrats, you got a mario figurine", width/2,450);
   }
@@ -441,7 +495,7 @@ void mousePressed(){
     rmoney -=50;
   }
   }
-  else if(rmoney<=49){
+  else if(rmoney<=0){
   box=false;
   }
   }
@@ -454,8 +508,8 @@ void mousePressed(){
     rmoney -=50;
   }
   }
-    else if(rmoney<=49){
-  box=false;
+    else if(rmoney<=0){
+     box=false;
   }
   }
   //if the red button is pressed
@@ -467,7 +521,7 @@ void mousePressed(){
     rmoney -=50;
   }
   }
-      else if(rmoney<=49){
+      else if(rmoney<=0){
   box=false;
   }
 }
@@ -480,7 +534,7 @@ void mousePressed(){
     rmoney -=50;
   }
   }
-        else if(rmoney<=49){
+        else if(rmoney<=0){
   box=false;
   }
   }
@@ -516,7 +570,7 @@ void keyPressed(){
     show = true;
   }
   
-  else if(rmoney<=19){
+  else if(rmoney<=0){
   show = false;
   }
   }
@@ -526,7 +580,7 @@ void keyPressed(){
     coffee = latte;
     show = true;
   }
-  else if(rmoney<=29){
+  else if(rmoney<=0){
   show = false;
   }
 }
@@ -536,7 +590,7 @@ void keyPressed(){
     coffee = mocha;
     show = true;
 }
-else if(rmoney <=24){
+else if(rmoney <=0){
 show = false;
 }
   }
@@ -545,4 +599,8 @@ show = false;
      scence = 2;
   }
 }
+  if(key == 'r' || key == 'R'){
+  money = random(0,599);
+  rmoney = round(money);
+  }
 }
