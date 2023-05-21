@@ -20,7 +20,7 @@ void setup() {
 void loop() {
 
   leftval = analogRead(leftfsr);
-  leftval = map(leftval,0,1023,0,63);
+  leftval = map(leftval,0,1023,0,62);
   delay(100);
 
   Serial.write(leftval);
@@ -39,6 +39,6 @@ void loop() {
   delay(100);
 
   Serial.write(rightval);
-   //Serial.println(rightval);
+  // Serial.println(rightval);
   
 }
