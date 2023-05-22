@@ -1,3 +1,26 @@
+/*
+//Su Huan - Final Project
+//  By pressed three pressure sensor to control the character action in the game. This project have two audio file so it need the Sound libraries download.
+
+// font url
+Stay Pixel Font : https://www.fontspace.com/stay-pixel-font-f66634
+
+
+// Images
+bk0: https://w0.peakpx.com/wallpaper/190/456/HD-wallpaper-2d-pixel-art-background-10-sky-cloud-2d-environments-unity-asset-store.jpg
+bk:https://cdnb.artstation.com/p/assets/images/images/038/935/389/large/raoni-dorim-mountains-night-highress.jpg?1624474759
+platform:https://www.iconspng.com/images/ilmenskie-flying-platform-2/ilmenskie-flying-platform-2.jpg
+gate: https://w7.pngwing.com/pngs/72/694/png-transparent-round-blue-plasma-illustration-portal-2-sprite-portal-spiral-sphere-desktop-wallpaper-thumbnail.png
+gate2:https://www.pinterest.com/pin/find-hd-ftestickers-space-galaxy-circle-portal-blackhole-galaxy-portal-png-transparent-png-to-search-and-download-more-free--870039221732649491/
+player:https://w7.pngwing.com/pngs/75/10/png-transparent-disney-s-stitch-experiment-626-lilo-pelekai-pixel-art-cartoon-character-pixel-art-thumbnail.png
+
+//music
+8-bit dream land: https://pixabay.com/music/video-games-8-bit-dream-land-142093/
+sinneslöschen - beam:https://pixabay.com/music/video-games-sinnesloschen-beam-117362/
+
+
+
+*/
 float py = 600;
 float px = 350;
 float pw = 50;
@@ -62,29 +85,96 @@ int val=0; //to send over Serial
 import processing.serial.*;  //import Serial library
 Serial myPort;  // create object from Serial class
 
+PImage bk0;
 PImage bk;
 PImage platform;
 PImage player;
+PImage gate;
+PImage gate2;
+PFont font;
+
+import processing.sound.*;
+SoundFile start;
+SoundFile playing;
+
+int sound = 0;
+//
+int scence = 0;
 
 void setup(){
 size(700,700);
-
+bk0 = loadImage("bk0.jpeg");
+bk0.resize(700,700);
 bk = loadImage("bk.jpeg");
 bk.resize(700,700);
 
 platform = loadImage("platform.png");
 
 player = loadImage("py.png");
+
+gate = loadImage("gate.png");
+gate.resize(50,50);
+gate2 = loadImage("gate2.png");
+gate2.resize(60,60);
+font = createFont("StayPixel.ttf",50);
+
+start = new SoundFile(this, "dreamland.mp3");
+//start.loop();
+playing = new SoundFile(this, "beam.mp3");
+
+
 rectMode(CENTER);
 
   //set up Serial communication
   printArray(Serial.list()); // prints port list to the console
-  String portName = Serial.list()[1]; //change to match your port
+  String portName = Serial.list()[4]; //change to match your port
   myPort = new Serial(this, portName, 9600); //initialize Serial communication at 9600 baud
 }
 void draw() {
   
-  image(bk,0,0);
+  if(scence == 0){
+
+    scence();
+  }
+  else if(scence == 1){
+    scence1();
+
+  }
+  
+  else if (scence == 2){
+  scence2();
+
+  }
+}
+void scence(){
+  playing.stop();
+  if(!start.isPlaying()){
+  start.play();
+  }
+  
+  image(bk0,0,0);
+  textFont(font);
+  textAlign(CENTER);
+  fill(229,230,255);
+  text("Press Return key to start", width/2,height/2);
+  textSize(35);
+  text("Press one of the pressure square sensor", width/2, height/2 + 50);
+  text("for control the character movement", width/2, height/2 + 90);
+
+
+}
+
+    
+void scence1(){
+
+       start.stop();
+
+   if(!playing.isPlaying()){
+ playing.play();
+ }
+image(bk,0,0);
+image(gate,70,30);
+image(gate2,590,30);
   //background(0); 
     if ( myPort.available() >  0 ) { // If data is available,
     val = myPort.read(); // read it and store it in val
@@ -149,7 +239,7 @@ void draw() {
           px - pw/2 < platformx6 + platformw6/2 &&
           py + pw/2 > platformy6 - platformh6/2 &&
           py - pw/2 < platformy6 + platformh6/2) {
-    py =  platformy6 - platformh6/2 - ph/2;
+    py =  groundy - groundh/2 - ph/2;
     vy = 0;
   }
     // seventh platform
@@ -234,44 +324,47 @@ void draw() {
     py = platformy9 + platformh9/2 + ph/2;
     vy = 0;
   }
+  
+  if(py ==  platformy9 - platformh9/2 - ph/2){
+  scence = 2;
+  }
   if (keyPressed && keyCode == LEFT) {
     px -= 5;
   }  
   if (keyPressed && keyCode == RIGHT) {
     px += 5;
   }
-/*
+
  if(val > 0 && val < 62){
-  //draws an ellipse that grows and shrinks in relation to val
 px -= 5;
 }
-    else if(val > 63 && val < 126 && py + ps/2 == groundy - groundh/2){
+    else if(val > 63 && val < 126 && py + ph/2 == groundy - groundh/2){
     vy -= 4;
 }
-   else if (val > 63 && val < 126 && py + ps/2 == platformy - platformh/2) {
+   else if (val > 63 && val < 126 && py + ph/2 == platformy - platformh/2) {
     vy -= 4;
 }
-   else if (val > 63 && val < 126 && py + ps/2 == platformy2 - platformh2/2) {
+   else if (val > 63 && val < 126 && py + ph/2 == platformy2 - platformh2/2) {
     vy -= 4;
   }
-   else if (val > 63 && val < 126 && py + ps/2 == platformy3 - platformh3/2) {
+   else if (val > 63 && val < 126 && py + ph/2 == platformy3 - platformh3/2) {
     vy -= 4;
-}  else if (val > 63 && val < 126 && py + ps/2 == platformy4 - platformh4/2) {
+}  else if (val > 63 && val < 126 && py + ph/2 == platformy4 - platformh4/2) {
     vy -= 4;
-}   else if (val > 63 && val < 126 && py + ps/2 == platformy5 - platformh5/2) {
+}   else if (val > 63 && val < 126 && py + ph/2 == platformy5 - platformh5/2) {
     vy -= 4;
-}   else if (val > 63 && val < 126 && py + ps/2 == platformy6 - platformh6/2) {
+}   else if (val > 63 && val < 126 && py + ph/2 == platformy6 - platformh6/2) {
     vy -= 4;
-}   else if (val > 63 && val < 126 && py + ps/2 == platformy7 - platformh7/2) {
+}   else if (val > 63 && val < 126 && py + ph/2 == platformy7 - platformh7/2) {
     vy -= 4;
-}   else if (val > 63 && val < 126 && py + ps/2 == platformy8 - platformh8/2) {
+}   else if (val > 63 && val < 126 && py + ph/2 == platformy8 - platformh8/2) {
     vy -= 4;
-}   else if (val > 63 && val < 126 && py + ps/2 == platformy9 - platformh9/2) {
+}   else if (val > 63 && val < 126 && py + ph/2 == platformy9 - platformh9/2) {
     vy -= 4;
 }
 else if(val > 127 && val <= 255){
 px += 5;
-} */
+} 
 
 println(val);
  
@@ -336,9 +429,18 @@ if (platformx8 + platformw8/2 < 0) {
     image(platform,platformx9 - platformw9/2-10, platformy9 - platformh9/2-10, platformw9, platformh9);
 }
 
+void scence2(){
+  //playing.stop();
+  image(bk0,0,0);
+  textFont(font);
+  textAlign(CENTER);
+  fill(229,230,255);
+  textSize(35);
+  text("You Win", width/2,height/2);
+  text("Press R key to restart", width/2, height/2 + 50);
 
-    
-    
+
+}
 
 void keyPressed() {
   // if the circle y is on the sufrface of the ground then make the velocity to negative so it can jump.
@@ -365,5 +467,18 @@ void keyPressed() {
     vy -= 4;
 }   else if (keyCode == 32 && py + ph/2 == platformy9 - platformh9/2) {
     vy -= 4;
+}
+
+if(keyCode == ENTER){
+  if(scence == 0){
+  scence = 1;
+  }
+}
+if(key == 'r' || key == 'R'){
+  if(scence == 2){
+   px = 350;
+   py = 600;
+  scence = 0;
+  }
 }
 } 
